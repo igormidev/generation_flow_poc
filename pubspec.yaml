@@ -1,0 +1,63 @@
+name: generation_flow_poc
+description: "A new Flutter project."
+
+
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.3 <4.0.0' 
+
+dependencies:
+  flutter:
+    sdk: flutter 
+  cupertino_icons: ^1.0.2
+  flutter_bloc: ^8.1.3
+  bloc: ^8.1.2
+  flutter_animate: ^4.4.1
+  freezed_annotation: ^2.4.1
+  enchanted_regex: ^1.0.2
+  enchanted_collection: 
+  lottie: ^3.0.0
+  device_preview: ^1.1.0
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter 
+  flutter_lints: ^2.0.0 
+  build_runner: ^2.3.3 
+  freezed: ^2.3.2
+
+flutter: 
+  uses-material-design: true
+  assets:
+    - assets/lottie/
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
