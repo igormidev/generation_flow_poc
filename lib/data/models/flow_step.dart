@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 class FlowStep {
   final EScreenType screenState;
   final String uiTextBuilder;
@@ -19,6 +20,9 @@ class FlowStep {
       uiTextBuilder: map['ui'] as String,
     );
   }
+
+  @override
+  String toString() => 'uiTextBuilder: $uiTextBuilder';
 }
 
 enum EScreenType {

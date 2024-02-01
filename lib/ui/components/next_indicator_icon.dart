@@ -7,10 +7,16 @@ class NextIndicatorIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Lottie.asset(
-      Constants.i.lottie.doubleArrow,
-      width: 32,
-      height: 32,
+    return ColorFiltered(
+      colorFilter: ColorFilter.mode(
+        Theme.of(context).colorScheme.primaryContainer,
+        BlendMode.modulate,
+      ),
+      child: Lottie.asset(
+        Constants.i.lottie.doubleArrow,
+        width: 32,
+        height: 32,
+      ),
     );
   }
 }

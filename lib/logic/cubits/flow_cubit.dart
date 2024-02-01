@@ -27,13 +27,25 @@ class FlowCubit extends Cubit<FlowState> {
     ));
   }
 
+  Future<void> showDiferrentAnswers(int stepIndex) async {
+    final prevHist = {...state.history};
+    prevHist.remove(stepIndex);
+    emit(FlowState(history: prevHist));
+    final response = await _repository.runFlowStep("Show me different answers");
+    final newMap = Map.from(prevHist);
+    newMap[stepIndex] = response;
+    emit(FlowState(
+      history: {...newMap},
+    ));
+  }
+
   Future<void> finishFlow({
     required EEpisodeTime episodeLenght,
-    required String title,
+    required List<String> titles,
   }) async {
     await _repository.finishFlow(
       episodeLenght: episodeLenght,
-      title: title,
+      titles: titles,
     );
   }
 }

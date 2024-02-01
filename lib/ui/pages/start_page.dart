@@ -76,10 +76,7 @@ class _StartPageState extends State<StartPage> with ValidatorsMixins {
                   decoration: const InputDecoration(
                     labelText: 'Type your interest...',
                   ),
-                  validator: (val) => combineValidators([
-                    () => isNotEmpty(val),
-                    () => lenghtHasToBeAtLeast(8, val),
-                  ]),
+                  validator: isNotEmpty,
                 ),
               ),
               const SizedBox(height: 8),
@@ -128,9 +125,9 @@ class _StartPageState extends State<StartPage> with ValidatorsMixins {
                       return;
                     }
 
-                    context
-                        .read<FlowCubit>()
-                        .runFlowStep(widget.currentStep + 1, 'Skip to Titles');
+                    context.read<FlowCubit>().runFlowStep(
+                        widget.currentStep + 1,
+                        'Take me straight to possible titles');
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return FlowPage(step: widget.currentStep + 1);

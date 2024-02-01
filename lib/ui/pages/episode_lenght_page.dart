@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:generation_flow_poc/data/models/episode_time_enum.dart';
+import 'package:generation_flow_poc/logic/cubits/flow_cubit.dart';
 import 'package:generation_flow_poc/logic/mixins/start_flow_again_mixin.dart';
+import 'package:generation_flow_poc/ui/components/restart_flow_button.dart';
 
 class EpisodeLenghtPage extends StatefulWidget {
-  final String title;
+  final List<String> titles;
   const EpisodeLenghtPage({
     super.key,
-    required this.title,
+    required this.titles,
   });
 
   @override
@@ -19,9 +22,7 @@ class _EpisodeLenghtPageState extends State<EpisodeLenghtPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Episode lenght'),
-      ),
+      appBar: AppBar(),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -56,7 +57,7 @@ class _EpisodeLenghtPageState extends State<EpisodeLenghtPage>
                   ),
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -64,13 +65,8 @@ class _EpisodeLenghtPageState extends State<EpisodeLenghtPage>
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 32),
         child: Row(
           children: [
-            FloatingActionButton(
-              onPressed: resetFlow,
-              backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
-              elevation: 0,
-              child: const Icon(
-                Icons.refresh_outlined,
-              ),
+            RestartFlowButton(
+              onResetPressed: resetFlow,
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -86,6 +82,10 @@ class _EpisodeLenghtPageState extends State<EpisodeLenghtPage>
                       );
                     return;
                   }
+                  context.read<FlowCubit>().finishFlow(
+                        episodeLenght: selectedEpisodeTime!,
+                        titles: widget.titles,
+                      );
 
                   showDialog(
                     context: context,

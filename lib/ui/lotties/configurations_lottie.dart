@@ -70,7 +70,7 @@ class ConfigurationsLottie extends StatelessWidget {
                     ['**', 'Ebene 1', 'Gruppe $e', '**'],
                     value: primaryColor,
                   );
-                }).toList(),
+                }),
 
                 // Hair
                 ValueDelegate.color(

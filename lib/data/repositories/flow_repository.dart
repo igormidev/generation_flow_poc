@@ -1,11 +1,11 @@
+import 'package:generation_flow_poc/data/interfaces/i_generator_service.dart';
 import 'package:generation_flow_poc/data/models/episode_time_enum.dart';
 import 'package:generation_flow_poc/data/models/flow_step.dart';
-import 'package:generation_flow_poc/data/services/generator_service.dart';
 
 class FlowRepository {
-  final GeneratorService _service;
+  final IGeneratorService _service;
 
-  const FlowRepository({required GeneratorService service})
+  const FlowRepository({required IGeneratorService service})
       : _service = service;
 
   Future<FlowStep> createFlow() async {
@@ -20,11 +20,11 @@ class FlowRepository {
 
   Future<void> finishFlow({
     required EEpisodeTime episodeLenght,
-    required String title,
+    required List<String> titles,
   }) async {
     await _service.finishUserCreationFlow(
       episodeLenght: episodeLenght,
-      title: title,
+      titles: titles,
     );
   }
 }

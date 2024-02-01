@@ -9,6 +9,7 @@ import 'package:generation_flow_poc/logic/mixins/start_flow_again_mixin.dart';
 import 'package:generation_flow_poc/ui/components/flow_bottom_navigation_bar.dart';
 import 'package:generation_flow_poc/ui/pages/episode_lenght_page.dart';
 import 'package:generation_flow_poc/ui/pages/flow_page.dart';
+import 'package:generation_flow_poc/ui/pages/start_page.dart';
 
 class QuestionsPage extends StatefulWidget {
   final int currentStep;
@@ -26,10 +27,15 @@ class QuestionsPage extends StatefulWidget {
 class _QuestionsPageState extends State<QuestionsPage>
     with PatternCastMixin, StartFlowAgainMixin {
   QuestionPattern? questionPattern;
-  String? selectedButtonText;
+  String selectedButtonText = '';
+  final List<String> titles = [];
+
+  final TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final isTitlesScreen = widget.flowStep.screenState == EScreenType.end;
+
     questionPattern = fromQuestionUi(
       source: widget.flowStep.uiTextBuilder,
       scheme: context.scheme,
@@ -42,11 +48,7 @@ class _QuestionsPageState extends State<QuestionsPage>
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.flowStep.screenState == EScreenType.end
-            ? 'Title selection'
-            : 'Question page'),
-      ),
+      appBar: AppBar(),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -75,7 +77,10 @@ class _QuestionsPageState extends State<QuestionsPage>
                       const SizedBox(height: 20),
                       ...options.map(
                         (option) {
-                          final isSelected = option == selectedButtonText;
+                          final isSelected = isTitlesScreen
+                              ? titles.contains(option)
+                              : option == selectedButtonText;
+
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 12),
                             child: ElevatedButton(
@@ -89,15 +94,52 @@ class _QuestionsPageState extends State<QuestionsPage>
                                         .tertiaryContainer,
                               ),
                               onPressed: () {
-                                setState(() {
-                                  selectedButtonText = option;
-                                });
+                                if (controller.text.isNotEmpty) {
+                                  controller.clear();
+                                }
+
+                                if (isTitlesScreen) {
+                                  titles.add(option);
+                                  setState(() {});
+                                } else {
+                                  setState(() {
+                                    selectedButtonText = option;
+                                  });
+                                }
                               },
                               child: Text(option),
                             ),
                           );
                         },
                       ),
+                      const SizedBox(height: 4),
+                      TextButton.icon(
+                        onPressed: () {
+                          context
+                              .read<FlowCubit>()
+                              .showDiferrentAnswers(widget.currentStep);
+                        },
+                        label: const Text('Show me different answers'),
+                        icon: const Icon(Icons.refresh),
+                      ),
+                      const SizedBox(height: 8),
+                      const OrDivider(),
+                      const SizedBox(height: 12),
+                      TextFormField(
+                        controller: controller,
+                        decoration: const InputDecoration(
+                          hintText: 'Type in your own input...',
+                        ),
+                        onChanged: (value) {
+                          if (titles.isNotEmpty ||
+                              selectedButtonText.isNotEmpty) {
+                            titles.clear();
+                            selectedButtonText = '';
+                            setState(() {});
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 12),
                     ],
                   );
                 },
@@ -106,48 +148,40 @@ class _QuestionsPageState extends State<QuestionsPage>
         ),
       ),
       bottomSheet: FlowBottomNavigationBar(
-          currentStep: widget.currentStep,
-          onResetPressed: resetFlow,
-          onContinuePressed: () {
-            if (selectedButtonText == null) {
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(
-                  const SnackBar(
-                    content: Text('Select an title'),
-                  ),
-                );
-              return;
-            }
-
-            switch (widget.flowStep.screenState) {
-              case EScreenType.start:
-                break;
-              case EScreenType.questions:
-                context
-                    .read<FlowCubit>()
-                    .runFlowStep(widget.currentStep + 1, selectedButtonText!);
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) {
-                      return FlowPage(
-                        step: widget.currentStep + 1,
-                      );
-                    },
-                  ),
-                );
-              case EScreenType.end:
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) {
-                      return EpisodeLenghtPage(
-                        title: selectedButtonText!,
-                      );
-                    },
-                  ),
-                );
-            }
-          }),
+        currentStep: widget.currentStep,
+        onResetPressed: resetFlow,
+        onContinuePressed: () {
+          final text =
+              controller.text.isNotEmpty ? controller.text : selectedButtonText;
+          switch (widget.flowStep.screenState) {
+            case EScreenType.start:
+              break;
+            case EScreenType.questions:
+              context
+                  .read<FlowCubit>()
+                  .runFlowStep(widget.currentStep + 1, text);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) {
+                    return FlowPage(
+                      step: widget.currentStep + 1,
+                    );
+                  },
+                ),
+              );
+            case EScreenType.end:
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) {
+                    return EpisodeLenghtPage(
+                      titles: titles,
+                    );
+                  },
+                ),
+              );
+          }
+        },
+      ),
     );
   }
 }

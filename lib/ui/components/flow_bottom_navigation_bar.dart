@@ -21,44 +21,29 @@ class FlowBottomNavigationBar extends StatelessWidget {
       padding: const EdgeInsets.only(
         bottom: 32,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          FloatingActionButton(
-            onPressed: onResetPressed,
-            backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
-            elevation: 0,
-            child: const Icon(
-              Icons.refresh_outlined,
-            ),
-          ),
-          ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width * 0.55,
-            ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: FilledButton(
               onPressed: onContinuePressed,
               child: const Text('Continue'),
             ),
           ),
-          SizedBox(
-            width: 54,
-            height: 54,
-            child: OutlinedButton(
-              onPressed: () {
-                context
-                    .read<FlowCubit>()
-                    .runFlowStep(currentStep + 1, 'Skip to Titles');
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
-                  return FlowPage(step: currentStep + 1);
-                }));
-              },
-              style: OutlinedButton.styleFrom(
-                padding: EdgeInsets.zero,
-              ),
-              child: const NextIndicatorIcon(),
+          TextButton.icon(
+            onPressed: () {
+              context.read<FlowCubit>().runFlowStep(
+                  currentStep + 1, 'Take me straight to possible titles');
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return FlowPage(step: currentStep + 1);
+              }));
+            },
+            style: OutlinedButton.styleFrom(
+              padding: EdgeInsets.zero,
             ),
+            icon: const NextIndicatorIcon(),
+            label: const Text('Skip to titles'),
           ),
         ],
       ),

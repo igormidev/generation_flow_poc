@@ -85,7 +85,6 @@ class _GreyContainer extends StatelessWidget {
   final double width;
   final double height;
   const _GreyContainer({
-    super.key,
     required this.width,
     this.height = 40,
   });

@@ -48,8 +48,6 @@ mixin PatternCastMixin {
                     // alignment: PlaceholderAlignment.middle,
                     child: Builder(builder: (context) {
                       return InkWell(
-                        canRequestFocus: true,
-                        focusNode: FocusNode()..requestFocus(),
                         onTap: () {
                           onClick(cleanGroup);
                         },
